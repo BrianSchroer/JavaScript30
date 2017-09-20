@@ -145,7 +145,7 @@
   </div>
 
   <script>
-    const panels = document.querySelectorAll('.panel');
+    const panels = Array.from(document.querySelectorAll('.panel'));
 
     function toggleOpen() {
       this.classList.toggle('open');

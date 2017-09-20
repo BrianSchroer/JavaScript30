@@ -62,7 +62,7 @@
   <script>
     window.addEventListener('keydown', playSound);
 
-    document.querySelectorAll('div.key').forEach(key => {
+    Array.from(document.querySelectorAll('div.key')).forEach(key => {
       key.addEventListener('transitionend', removeTransition);
     });
 
