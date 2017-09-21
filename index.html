@@ -10,8 +10,10 @@
   <style>
     html {
       box-sizing: border-box;
-      background: #241e49 url(https://javascript30.com/images/JS3-social-share.png);
-      background-size: 100%;
+      background-color: #241e49;
+      background-image: url(https://javascript30.com/images/JS3-social-share.png);
+      background-repeat: no-repeat;
+      background-position: center;
       font-family: sans-serif;
     }
 
@@ -25,56 +27,57 @@
       box-sizing: inherit;
     }
 
-    .panels {
+    .challenges {
       min-height: 100vh;
       overflow: hidden;
       background-color: #241e49;
-      opacity: 0.6;
-      width: 300px;
+      opacity: 0.8;
+      width: 280px;
     }
 
-    .panel {
+    .challenge {
       margin: 0.5em;
       font-size: 18px;
     }
 
-    .panel a {
-      color: #FFAE00;
+    .challenge a {
+      color: #ffc600;
       text-decoration: none;
     }
 
-    .panel a:hover {
+    .challenge a:hover {
+      color: white;
       font-weight: bold;
       text-decoration: underline;
     }
   </style>
 
-  <div class="panels">
-    <div class="panel">
-      <a href="01 - JavaScript Drum Kit/index.html">01 - JavaScript Drum Kit</a>
-    </div>
-    <div class="panel">
-      <a href="02 - JS and CSS Clock/index.html">02 - JS and CSS Clock</a>
-    </div>
-    <div class="panel">
-      <a href="03 - CSS Variables/index.html">03 - CSS Variables</a>
-    </div>
-    <div class="panel">
-      <a href="04 - Array Cardio Day 1/index.html">04 - Array Cardio Day 1</a>
-    </div>
-    <div class="panel">
-      <a href="05 - Flex Panel Gallery/index.html">05 - Flex Panel Gallery</a>
-    </div>
-    <div class="panel">
-      <a href="06 - Type Ahead/index.html">06 - Type Ahead</a>
-    </div>
-    <div class="panel">
-      <a href="07 - Array Cardio Day 2/index.html">07 - Array Cardio Day 2</a>
-    </div>
-    <div class="panel">
-      <a href="08 - Fun with HTML5 Canvas/index.html">08 - Fun with HTML5 Canvas</a>
-    </div>
+  <div class="challenges">
   </div>
+
+  <script>
+    const challenges = [
+      '01 - JavaScript Drum Kit',
+      '02 - JS and CSS Clock',
+      '03 - CSS Variables',
+      '04 - Array Cardio Day 1',
+      '05 - Flex Panel Gallery',
+      '06 - Type Ahead',
+      '07 - Array Cardio Day 2',
+      '08 - Fun with HTML5 Canvas',
+      '09 - Dev Tools Domination'
+    ];
+
+    const challengesDiv = document.querySelector('div.challenges');
+
+    const html = challenges.map(challenge =>
+      `<div class="challenge">
+          <a href="${challenge}/index.html">${challenge}</a>
+        </div>`
+    );
+
+    challengesDiv.innerHTML = html.join('');
+  </script>
 
 </body>
 
