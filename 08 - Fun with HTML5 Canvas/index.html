@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      background-color: #241e49;
+      color: white;
+      padding: 0.5em;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    #header>p {
+      flex: 5;
+    }
+
+    #header>button {
+      flex: 1;
+    }
+
+    button {
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <p>Click below to "finger-paint"!</p>
+    <button id="resetButton">Reset</button>
+  </div>
+  <canvas id="draw" width="800" height="800"></canvas>
+
+  <script>
+    function initializeCanvas() {
+      const canvas = document.querySelector('#draw');
+      canvas.height = window.innerHeight - document.querySelector('#header').offsetHeight;
+      canvas.width = window.innerWidth;
+      return canvas;
+    }
+
+    function initializeContext(canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#BADA55';
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 100;
+      //ctx.globalCompositeOperation = 'multiply';
+      return ctx;
+    }
+
+    const canvas = initializeCanvas();
+    const ctx = initializeContext(canvas);
+    let hue = 0;
+    let isDrawing = false;
+    let direction = true;;
+    let previousPoint = { x: 0, y: 0 };
+    let widthAddend = 1;
+
+    function drawStroke(newPoint) {
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      ctx.beginPath();
+      ctx.moveTo(previousPoint.x, previousPoint.y);
+      ctx.lineTo(newPoint.x, newPoint.y);
+      ctx.stroke();
+    }
+
+    function adjustHue() {
+      hue++;
+      if (hue >= 360) {
+        hue = 0;
+      }
+    }
+
+    function adjustLineWidth() {
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 5) {
+        widthAddend *= -1; // switch between 1 & -1
+      }
+
+      ctx.lineWidth += widthAddend;
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+
+      const newPoint = { x: e.offsetX, y: e.offsetY };
+
+      drawStroke(newPoint);
+      adjustHue();
+      adjustLineWidth();
+
+      previousPoint = newPoint;
+    }
+
+    canvas.addEventListener('mousemove', draw);
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      previousPoint = { x: e.offsetX, y: e.offsetY };
+    });
+
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false); // mouse moved off canvas
+
+    const resetButton = document.querySelector('#resetButton');
+    resetButton.addEventListener('click', () =>
+      ctx.clearRect(0, 0, canvas.width, canvas.height));
+  </script>
+
+</body>
+
+</html>
