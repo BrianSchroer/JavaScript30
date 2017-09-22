@@ -43,8 +43,8 @@
 
   <script>
     function initializeCanvas() {
-      const canvas = document.querySelector('#draw');
-      canvas.height = window.innerHeight - document.querySelector('#header').offsetHeight;
+      const canvas = document.getElementById('draw');
+      canvas.height = window.innerHeight - document.getElementById('header').offsetHeight;
       canvas.width = window.innerWidth;
       return canvas;
     }
@@ -112,7 +112,7 @@
     canvas.addEventListener('mouseup', () => isDrawing = false);
     canvas.addEventListener('mouseout', () => isDrawing = false); // mouse moved off canvas
 
-    const resetButton = document.querySelector('#resetButton');
+    const resetButton = document.getElementById('resetButton');
     resetButton.addEventListener('click', () =>
       ctx.clearRect(0, 0, canvas.width, canvas.height));
   </script>
