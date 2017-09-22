@@ -1,46 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Console Tricks!</title>
+  <link rel="stylesheet" href="../HtmlBuilder.css">
+  <style>
+    ul li {
+      margin-bottom: 0.5em;
+      font-size: 120%;
+    }
+  </style>
+  <script src="../HtmlBuilder.js"></script>
 </head>
-<body>
 
-  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+<body>
+  <p id="greenP" onClick="makeGreen()">
+    It isn't easy being green.
+  </p>
+
+  <ol>
+    <li>Right-click the paragraph above, then click "Inspect"</li>
+    <li>In dev tools, right-click the "p" element, then click "Break on..." / "attribute modifications"</li>
+    <li>(Left-)click the paragraph above, and code execution should be paused in the JavaScript "makeGreen()" function.</li>
+  </ol>
+
+  <p style="margin-top: 2em">
+    Press F12 to see the results of these console statements:
+  </p>
+  <ul id="consoleExamples"></ul>
 
   <script>
-    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+    const html = new HtmlBuilder();
+
+    const dogs = [
+      { name: 'Snickers', age: 2 },
+      { name: 'Hugo', age: 8 }
+    ];
 
     function makeGreen() {
-      const p = document.querySelector('p');
+      const p = document.querySelector('#greenP');
       p.style.color = '#BADA55';
       p.style.fontSize = '50px';
     }
 
+    function logDescription(description) {
+      html.appendElement('li', `<pre>${description}</pre>`);
+      logLarger(`\n"${description}" results in:`);
+    }
+
+    function logLarger(message) {
+      console.log(`%c ${message}`, 'font-style: italic; font-size: medium');
+    }
+
     // Regular
+    logDescription("console.log('hello')");
+    console.log('hello');
+
+    // variables:
+    const name = 'Brian';
+    logDescription(`console.log(name)`);
+    console.log(name);
+    logDescription(`console.log({ name })`);
+    console.log({ name });
 
     // Interpolated
+    logDescription("console.log('Current time: %s', new Date())");
+    console.log('Current time: %s', new Date());
+    logLarger('...but now we have ES6 string templates, e.g. "console.log(`Current time: ${new Date()}`)":');
+    console.log(`Current time: ${new Date()}`);
 
     // Styled
+    logDescription("console.log('%c I am using a big yellow font!', 'font-size: large; color: yellow')");
+    console.log('%c I am using a big yellow font!', 'font-size: large; color: yellow');
 
     // warning!
+    logDescription("console.warn('This may be a problem!')");
+    console.warn('This may be a problem!');
 
     // Error :|
+    logDescription("console.error('This is definitely a problem!')");
+    console.error('This is definitely a problem!');
 
     // Info
+    logDescription("console.info('The peanut is neither a pea nor a nut.')");
+    console.info('The peanut is neither a pea nor a nut.');
 
     // Testing
+    logDescription("console.assert(1 === 1, '1 should equal 1')");
+    console.assert(1 === 1, '1 should equal 1');
+    logDescription("console.assert(1 === 2, '1 should not equal 2!')");
+    console.assert(1 === 2, '1 should not equal 2!');
 
     // clearing
+    logLarger('\n"console.clear()" clears the console.')
 
     // Viewing DOM Elements
+    logDescription("console.log(document.getElementById('greenP'))");
+    console.log(document.getElementById('greenP'));
+
+    logDescription("console.dir(document.getElementById('greenP'))");
+    console.dir(document.getElementById('greenP'));
 
     // Grouping together
+    logDescription(`
+dogs.forEach(dog => {
+  console.group(\`\${dog.name}\`);
+  console.log(\`About \${dog.name}:\`);
+  console.log(\`\${dog.name} is \${dog.age} years old.\`);
+  console.log(\`That's \${dog.age * 7} in dog years!\`);
+  console.groupEnd(\`\${dog.name}\`);
+});`);
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`);
+      console.log(`About ${dog.name}:`);
+      console.log(`${dog.name} is ${dog.age} years old.`);
+      console.log(`That's ${dog.age * 7} in dog years!`);
+      console.groupEnd(`${dog.name}`);
+    });
+
+    logDescription(`
+dogs.forEach(dog => {
+  console.groupCollapsed(\`\${dog.name}\`);
+  console.log(\`About \${dog.name}:\`);
+  console.log(\`\${dog.name} is \${dog.age} years old.\`);
+  console.log(\`That's \${dog.age * 7} in dog years!\`);
+  console.groupEnd(\`\${dog.name}\`);
+});`);
+    dogs.forEach(dog => {
+      console.groupCollapsed(`${dog.name}`);
+      console.log(`About ${dog.name}:`);
+      console.log(`${dog.name} is ${dog.age} years old.`);
+      console.log(`That's ${dog.age * 7} in dog years!`);
+      console.groupEnd(`${dog.name}`);
+    });
 
     // counting
+    logDescription(`
+console.count('red');
+console.count('red');
+console.count('blue');
+console.count('red');
+console.count('blue');
+console.count('blue');
+console.count('red');`);
+
+    console.count('red');
+    console.count('red');
+    console.count('blue');
+    console.count('red');
+    console.count('blue');
+    console.count('blue');
+    console.count('red');
+
+    // table
+    logDescription(`console.table(dogs)`);
+    console.table(dogs);
 
     // timing
+    logDescription(`
+console.time('fetching data');
 
+fetch('https://api.github.com/users/brianschroer')
+  .then(data => data.json())
+  .then(data => {
+    console.timeEnd('fetching data');
+    console.log(data);
+  });`);
+
+    console.time('fetching data');
+    fetch('https://api.github.com/users/brianschroer')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data');
+        console.log(data);
+      });
+
+    html.render('#consoleExamples');
   </script>
 </body>
+
 </html>
