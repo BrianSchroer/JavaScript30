@@ -4,80 +4,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Array Cardio 💪</title>
-  <style>
-    body {
-      font-family: sans-serif;
-    }
-
-    h1 {
-      font-size: 20px;
-    }
-
-    table {
-      border: 1px solid #FFFFFF;
-      width: 350px;
-      height: 200px;
-      border-collapse: collapse;
-      margin-bottom: 1em;
-    }
-
-    table td,
-    table th {
-      border: 1px solid #FFFFFF;
-      padding: 3px 2px;
-    }
-
-    table tbody td {
-      font-size: 16px;
-    }
-
-    table tr:nth-child(even) {
-      background: #D0E4F5;
-    }
-
-    table thead {
-      background: #0B6FA4;
-      border-bottom: 5px solid #FFFFFF;
-    }
-
-    table thead th {
-      font-size: 17px;
-      font-weight: bold;
-      color: #FFFFFF;
-      text-align: center;
-      border-left: 2px solid #FFFFFF;
-    }
-
-    table thead th:first-child {
-      border-left: none;
-    }
-
-    table tfoot {
-      font-size: 14px;
-      font-weight: bold;
-      color: #333333;
-      background: #D0E4F5;
-      border-top: 3px solid #444444;
-    }
-
-    table tfoot td {
-      font-size: 14px;
-    }
-
-    table caption {
-      font-weight: bold;
-      text-align: left;
-      padding-bottom: 2px;
-    }
-  </style>
+  <link rel="stylesheet" href="../HtmlBuilder.css">
+  <script src="../HtmlBuilder.js"></script>
 </head>
 
 <body>
-  <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
   <div id="results" />
+
   <script>
     // Get your shorts on - this is an array workout!
     // ## Array Cardio Day 1
+
+    const html = new HtmlBuilder();
+    html.appendPageHeader('Array Cardio Day 1');
 
     // Some data we can work with
 
@@ -98,113 +37,52 @@
 
     const people = ['Beck, Glenn', 'Becker, Carl', 'Beckett, Samuel', 'Beddoes, Mick', 'Beecher, Henry', 'Beethoven, Ludwig', 'Begin, Menachem', 'Belloc, Hilaire', 'Bellow, Saul', 'Benchley, Robert', 'Benenson, Peter', 'Ben-Gurion, David', 'Benjamin, Walter', 'Benn, Tony', 'Bennington, Chester', 'Benson, Leana', 'Bent, Silas', 'Bentsen, Lloyd', 'Berger, Ric', 'Bergman, Ingmar', 'Berio, Luciano', 'Berle, Milton', 'Berlin, Irving', 'Berne, Eric', 'Bernhard, Sandra', 'Berra, Yogi', 'Berry, Halle', 'Berry, Wendell', 'Bethea, Erin', 'Bevan, Aneurin', 'Bevel, Ken', 'Biden, Joseph', 'Bierce, Ambrose', 'Biko, Steve', 'Billings, Josh', 'Biondo, Frank', 'Birrell, Augustine', 'Black, Elk', 'Blair, Robert', 'Blair, Tony', 'Blake, William'];
 
-    const html = [];
-
-    function appendHtml(htmlString) {
-      html.push(htmlString);
-    }
-
-    function appendHtmlElement(tagName, value, attributes) {
-      const adjustedAttributes = (attributes) ? ' ' + attributes : '';
-      appendHtml(`<${tagName}${adjustedAttributes}>${value}</${tagName}>`);
-    }
-
-    function appendSectionHeader(text) {
-      appendHtmlElement('h1', text);
-    }
-
-    function appendParagraph(text, attributes) {
-      appendHtmlElement('p', text, attributes);
-    }
-
-    function getPropertyNames(obj) {
-      return Object.getOwnPropertyNames(obj);
-    }
-
-    function getPropertyNamesForArray(items) {
-      if (items && items.length) {
-        const item = items[0];
-        if (typeof item === 'object') {
-          return getPropertyNames(item);
-        }
-      }
-
-      return [];
-    }
-
-    function appendTable(caption, items) {
-      appendHtml('<table>');
-
-      const itemCount = (items) ? items.length : 0;
-      appendHtmlElement('caption', `${caption} (count: ${itemCount})`);
-
-      const propertyNames = getPropertyNamesForArray(items);
-      const isObjectArray = (propertyNames.length > 0);
-      appendHtml('<thead><tr>');
-      propertyNames.forEach(name => appendHtmlElement('th', name));
-      appendHtml('</tr></thead>');
-
-      appendHtml('<tbody>')
-      items.forEach(item => {
-        appendHtml('<tr>');
-        if (isObjectArray) {
-          propertyNames.forEach(name => appendHtmlElement('td', item[name]));
-        } else {
-          appendHtmlElement('td', item);
-        }
-        appendHtml('</tr>');
-      });
-      appendHtml('</tbody>');
-
-      appendHtml('</table>');
-    }
-
     function yearsLived(inventor) {
       return inventor.passed - inventor.year;
     }
 
-    appendSectionHeader('source data');
-    appendTable('inventors', inventors);
-    appendTable('people', people);
+    html.appendSectionHeader('source data');
+    html.appendTable('inventors', inventors);
+    html.appendTable('people', people);
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
-    appendSectionHeader(`1. Filter the list of inventors for those who were born in the 1500's`);
+    html.appendSectionHeader(`Filter the list of inventors for those who were born in the 1500's`);
     const bornInThe1500s = inventors.filter(inventor => inventor.year >= 1500 && inventor.year < 1600);
-    appendTable('', bornInThe1500s);
+    html.appendTable('', bornInThe1500s);
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors' first and last names
-    appendSectionHeader(`2. Give us an array of the inventors' first and last names`);
-    appendTable('', inventors.map(inventor => `${inventor.first} ${inventor.last}`));
+    html.appendSectionHeader(`Array of the inventors' first and last names`);
+    html.appendTable('', inventors.map(inventor => `${inventor.first} ${inventor.last}`));
 
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
-    appendSectionHeader(`3. Sort the inventors by birthdate, oldest to youngest`);
-    appendTable('', inventors.sort((i1, i2) => i1.year - i2.year));
+    html.appendSectionHeader(`Sort inventors by birthdate, oldest to youngest`);
+    html.appendTable('', inventors.sort((i1, i2) => i1.year - i2.year));
 
     const inventorsWithYearsLived = inventors.map(inventor => ({ ...inventor, yearsLived: yearsLived(inventor) }));
 
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live?
-    appendSectionHeader(`4. How many years did all the inventors live?`);
+    html.appendSectionHeader(`How many years did all the inventors live?`);
     const totalYears = inventorsWithYearsLived.reduce((total, inventor) => total + inventor.yearsLived,
       0);
-    appendParagraph(`The inventors lived a total of ${totalYears} years.`);
+    html.appendParagraph(`The inventors lived a total of ${totalYears} years.`);
 
     // 5. Sort the inventors by years lived
-    appendSectionHeader(`5. Sort the inventors by years lived`);
-    appendTable('', inventorsWithYearsLived.sort((i1, i2) => i2.yearsLived - i1.yearsLived));
+    html.appendSectionHeader(`Sort inventors by years lived`);
+    html.appendTable('', inventorsWithYearsLived.sort((i1, i2) => i2.yearsLived - i1.yearsLived));
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
-    appendSectionHeader(`6. create a list of Boulevards in Paris that contain 'de' anywhere in the name`);
-    appendParagraph('(done with F12 tools on wikipedia)');
+    html.appendSectionHeader(`Create a list of Boulevards in Paris that contain 'de' anywhere in the name`);
+    html.appendParagraph('(done with F12 tools on wikipedia)');
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
-    appendSectionHeader(`7. Sort people alphabetically by first name`);
-    appendTable('', people.sort((p1, p2) => {
+    html.appendSectionHeader(`Sort people alphabetically by first name`);
+    html.appendTable('', people.sort((p1, p2) => {
       firstName1 = p1.split(', ')[1];
       firstName2 = p2.split(', ')[1];
       return (firstName1 > firstName2) ? 1 : -1;
@@ -212,9 +90,9 @@
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these
-    appendSectionHeader(`8. Sum transportation mode instances`);
+    html.appendSectionHeader(`Sum transportation mode instances`);
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck'];
-    appendTable('source data', data);
+    html.appendTable('source data', data);
 
     const instanceCounts = data.reduce((tots, mode) => {
       if (!tots[mode]) {
@@ -225,14 +103,12 @@
       return tots;
     }, {});
 
-    console.log(instanceCounts);
-    const propertyNames = getPropertyNames(instanceCounts);
-    const counts = propertyNames.map(name => ({ mode: name, count: instanceCounts[name] }));
-    appendTable('instance counts', counts);
+    html.appendObjectHtml('instance counts', instanceCounts);
+    // const propertyNames = Object.getOwnPropertyNames(instanceCounts);
+    // const counts = propertyNames.map(name => ({ mode: name, count: instanceCounts[name] }));
+    // html.appendTable('instance counts', counts);
 
-    // render results:
-    const resultsDiv = document.querySelector('#results');
-    resultsDiv.innerHTML = html.join('');
+    html.render('#results');
   </script>
 </body>
 

@@ -4,12 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Array Cardio 💪💪</title>
+  <link rel="stylesheet" href="../HtmlBuilder.css">
+  <script src="../HtmlBuilder.js"></script>
 </head>
 
 <body>
-  <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <div id="results" />
+
   <script>
     // ## Array Cardio Day 2
+
+    const html = new HtmlBuilder();
+    html.appendPageHeader('Array Cardio Day 2');
 
     const people = [
       { name: 'Wes', year: 1988 },
@@ -26,6 +32,10 @@
       { text: 'Nice Nice Nice!', id: 542328 }
     ];
 
+    html.appendSectionHeader('source data');
+    html.appendTable('people', people);
+    html.appendTable('comments', comments);
+
     const currentYear = new Date().getFullYear();
 
     function getAge(person) {
@@ -35,35 +45,39 @@
     // Some and Every Checks
     // Array.prototype.some() // is at least one person 19 or older?
     // Array.prototype.every() // is everyone 19 or older?
+    html.appendSectionHeader('Array.prototype.some()');
     isAnyoneOverEighteen = people.some(person => getAge(person) > 18);
-    console.log({ isAnyoneOverEighteen });
+    html.appendParagraph(`Is at least one person 19 or older?: ${isAnyoneOverEighteen}`);
 
+    html.appendSectionHeader('Array.prototype.every()');
     isEveryoneOverEighteen = people.every(person => getAge(person) > 18);
-    console.log({ isEveryoneOverEighteen });
+    html.appendParagraph(`Is everyone 19 or older?: ${isEveryoneOverEighteen}`);
 
     // Array.prototype.find()
     // Find is like filter, but instead returns just the one you are looking for
     // find the comment with the ID of 823423
+    html.appendSectionHeader('Array.prototype.find()');
     const comment823423 = comments.find(comment => comment.id === 823423);
-    console.log({ comment823423 });
+    html.appendObjectHtml('comment 823423', comment823423);
 
     // Array.prototype.findIndex()
     // Find the comment with this ID
     // delete the comment with the ID of 823423
+    html.appendSectionHeader('Array.prototype.findIndex()');
     let index = comments.findIndex(comment => comment.id === 823423);
-    console.log({ index });
-    console.log('Comment count', comments.length);
+    html.appendParagraph(`Index of comment 823423 = ${index}`);
 
+    html.appendParagraph(`Deleting comment 823423...`);
     const selectedComments = [
       ...comments.slice(0, index),
       ...comments.slice(index + 1)
     ];
 
     index = selectedComments.findIndex(comment => comment.id === 823423);
-    console.log({ index });
-    console.log('Selected comment count', selectedComments.length);
-    console.log('Comments with 823423 removed:')
-    console.table(selectedComments);
+    html.appendParagraph(`Index of comment 823423 after delete = ${index}`);
+    html.appendTable('comments after deleting 823423', selectedComments);
+
+    html.render('#results');
   </script>
 </body>
 
