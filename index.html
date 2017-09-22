@@ -10,6 +10,7 @@
   <style>
     html {
       box-sizing: border-box;
+      color: white;
       background-color: #241e49;
       background-image: url(https://javascript30.com/images/JS3-social-share.png);
       background-repeat: no-repeat;
@@ -27,31 +28,39 @@
       box-sizing: inherit;
     }
 
+    h1 {
+      font-size: 26px;
+      background-color: #241e49;
+      opacity: 0.8;
+      text-align: center;
+    }
+
+    a {
+      color: #ffc600;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: white;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
     .challenges {
       min-height: 100vh;
       overflow: hidden;
       background-color: #241e49;
       opacity: 0.8;
-      width: 280px;
+      width: 300px;
     }
 
     .challenge {
       margin: 0.5em;
-      font-size: 18px;
-    }
-
-    .challenge a {
-      color: #ffc600;
-      text-decoration: none;
-    }
-
-    .challenge a:hover {
-      color: white;
-      font-weight: bold;
-      text-decoration: underline;
+      font-size: 16px;
     }
   </style>
-
+  <h1>Brian Schroer's solutions to the
+    <a href="https://javascript30.com" target="_blank">JavaScript 30</a> "30 Day vanilla JS coding challenge"</h1>
   <div class="challenges">
   </div>
 
@@ -65,7 +74,8 @@
       '06 - Type Ahead',
       '07 - Array Cardio Day 2',
       '08 - Fun with HTML5 Canvas',
-      '09 - Dev Tools Domination'
+      '09 - Dev Tools Domination',
+      '10 - Hold Shift and Check Checkboxes'
     ];
 
     const challengesDiv = document.querySelector('div.challenges');
