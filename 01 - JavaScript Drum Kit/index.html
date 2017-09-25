@@ -60,14 +60,14 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
   <script>
-    window.addEventListener('keydown', playSound);
+    window.addEventListener('keydown', (e) => playSound(e.keyCode));
 
     Array.from(document.querySelectorAll('div.key')).forEach(key => {
       key.addEventListener('transitionend', removeTransition);
+      key.addEventListener('click', (e) => playSound(key.dataset.key));
     });
 
-    function playSound(e) {
-      const keyCode = e.keyCode;
+    function playSound(keyCode) {
       const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
 
       if (!audio) return;
