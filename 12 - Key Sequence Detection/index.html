@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+
+<body>
+
+  <p style="font-size: 20px">Type the "<a href="https://en.wikipedia.org/wiki/secret_Code" target="_blank">Konami Code</a>" for a wonderful surprise!
+    <span id="face">😐</span></p>
+  <script>
+    const face = document.querySelector('#face');
+
+    let pressedKeys = [];
+    const secretCode = 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
+    const secretCodeFirstCharacter = 'ArrowUp';
+
+    function checkForMatch(joined) {
+      if (joined.includes(secretCode)) {
+        pressedKeys = [];
+        face.textContent = '😍';
+        cornify_add();
+        return;
+      }
+
+      let isPartialMatch = false;
+      const index = joined.indexOf(secretCodeFirstCharacter);
+
+      if (index > -1) {
+        const partial = joined.substring(index);
+        isPartialMatch = (secretCode.includes(partial));
+      }
+
+      face.textContent = (isPartialMatch) ? '😊' : '🙁';
+
+      if (!isPartialMatch) {
+        pressedKeys = [];
+      }
+    }
+
+    window.addEventListener('keyup', (e) => {
+      pressedKeys.push(e.key);
+      pressedKeys.splice(-secretCode.length - 1, pressedKeys.length - secretCode.length);
+      const joined = pressedKeys.join('');
+      checkForMatch(joined);
+    });
+  </script>
+
+</body>
+
+</html>
