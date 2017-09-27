@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+  <link rel="stylesheet" href="../HtmlBuilder.css">
+  <script src="../HtmlBuilder.js"></script>
+</head>
+
+<body>
+  <div id="results" />
+
+  <script>
+    const html = new HtmlBuilder();
+    html.appendPageHeader('Objects and Arrays - Reference vs. Copy');
+
+    // start with strings, numbers and booleans
+
+    // Let's say we have an array
+    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    html.appendSectionHeader(`Source array`);
+    html.appendParagraph("const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];");
+    html.appendTable('players', players);
+
+    // and we want to make a copy of it.
+
+    // You might think we can just do something like this:
+
+    // however what happens when we update that array?
+    const team = players;
+    team[0] = 'Wesley';
+
+    html.appendSectionHeader(`Reference`);
+    html.appendParagraph("const team = players;");
+    html.appendParagraph("team[0] = 'Wesley';");
+    html.appendTable('players', players);
+    html.appendTable('team', team);
+
+    // now here is the problem!
+
+    // oh no - we have edited the original array too!
+
+    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+
+    // So, how do we fix this? We take a copy instead!
+
+    // one way
+    const team2 = players.slice();
+    team2[3] = 'Lux';
+
+    html.appendSectionHeader(`Copy via slice`);
+    html.appendParagraph('const team2 = players.slice();');
+    html.appendParagraph("team2[3] = 'Lux';");
+    html.appendTable('players', players);
+    html.appendTable('team2', team2);
+
+    // or create a new array and concat the old one in
+    const team3 = [].concat(players);
+    team3[1] = 'Sparky';
+
+    html.appendSectionHeader('Copy via concat');
+    html.appendParagraph('const team3 = [].concat(players);');
+    html.appendParagraph("team3[1] = 'Sparky';");
+    html.appendTable('players', players);
+    html.appendTable('team3', team3);
+
+    // or use the new ES6 Spread
+    const team4 = [...players];
+    team4[2] = 'Brian';
+
+    html.appendSectionHeader('Copy via spread');
+    html.appendParagraph('const team4 = [...players];');
+    html.appendParagraph("team4[2] = 'Brian';");
+    html.appendTable('players', players);
+    html.appendTable('team4', team4);
+
+    // now when we update it, the original one isn't changed
+
+    // The same thing goes for objects, let's say we have a person object
+
+    // with Objects
+    const person = { name: 'Wes Bos', age: 80 };
+
+    html.appendSectionHeader('Source object');
+    html.appendParagraph("const person = { name: 'Wes Bos', age: 80 };");
+    html.appendObjectHtml('person', person);
+
+    // and think we make a copy:
+    const person2 = person;
+    person2.age = 99;
+
+    html.appendSectionHeader('Reference');
+    html.appendParagraph("const person2 = person;");
+    html.appendParagraph("person2.age = 99;");
+    html.appendObjectHtml('person', person);
+    html.appendObjectHtml('person2', person2);
+
+    // how do we take a copy instead?
+    const person3 = Object.assign({}, person, { age: 30 });
+
+    html.appendSectionHeader('Copy via Object.assign');
+    html.appendParagraph("const person3 = Object.assign({}, person, { age: 30 });");
+    html.appendObjectHtml('person', person);
+    html.appendObjectHtml('person3', person3);
+
+    // We will hopefully soon see the object ...spread
+
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    html.appendSectionHeader('Object.assign only copies one level deep - Below that are references!')
+
+    person.child = { name: 'Wes Bos Jr.', age: 30 };
+    html.appendParagraph("person.child = { name: 'Wes Bos Jr.', age: 30 };");
+    html.appendObjectHtml('person', person);
+
+    const person4 = Object.assign({}, person);
+    person4.child.age = 35;
+    html.appendParagraph("const person4 = Object.assign({}, person);");
+    html.appendParagraph("person4.child.age = 35;");
+    html.appendObjectHtml('person', person);
+    html.appendObjectHtml('person4', person4);
+
+    html.appendSectionHeader('Deep copy without references can be done via lodash or (hack) JSON stringify/parse');
+    const person5 = JSON.parse(JSON.stringify(person));
+    person5.child.age = 40;
+    html.appendParagraph("const person5 = JSON.parse(JSON.stringify(person));");
+    html.appendParagraph("person5.child.age = 40;");
+    html.appendObjectHtml('person', person);
+    html.appendObjectHtml('person5', person5);
+
+
+    html.render('#results');
+  </script>
+
+</body>
+
+</html>

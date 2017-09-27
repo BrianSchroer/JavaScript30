@@ -67,14 +67,12 @@ class HtmlBuilder {
   }
 
   appendObjectHtml(caption, obj) {
-    const propertyNames = Object.getOwnPropertyNames(obj);
+    const json = JSON.stringify(obj, null, 2);
 
-    const props = propertyNames.map(name => ({
-      property: name,
-      value: obj[name]
-    }));
-
-    this.appendTable(caption, props, /*displayCount=*/ false);
+    html.appendHtml('<div>');
+    html.appendHtml(`<span style="font-weight: bold">${caption}:</span>`);
+    html.appendHtml(`<pre style="margin: 0">${json}</pre>`);
+    html.appendHtml('</div>');
   }
 
   render(selector) {
