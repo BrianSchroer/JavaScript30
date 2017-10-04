@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+  <style>
+    html {
+      box-sizing: border-box;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    div {
+      width: 100%;
+      padding: 100px;
+    }
+
+    .one {
+      background: thistle;
+    }
+
+    .two {
+      background: mistyrose;
+    }
+
+    .three {
+      background: coral;
+    }
+  </style>
+
+  <button>I can only be clicked once!</button>
+  <script>
+    const clickOptions = {
+      capture: false, // When true, events "bubble down"; When false (default), they "bubble up"
+      once: false // Unbinds handler after first call
+    }
+
+    const shouldStopPropagation = false;
+
+    const divs = Array.from(document.querySelectorAll('div'));
+
+    function logClassList(e) {
+      if (shouldStopPropagation) {
+        e.stopPropagation();
+      }
+
+      console.log(this.classList.value);
+    }
+
+    function handleButtonClick() {
+      alert("Button was clicked! I won't tell you again!");
+    }
+
+    divs.forEach(div => div.addEventListener('click', logClassList, clickOptions));
+
+    document.querySelector('button').addEventListener('click', handleButtonClick, { once: true });
+  </script>
+</body>
+
+</html>
