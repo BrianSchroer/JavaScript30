@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Whack A Mole!</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>Whack-a-mole!
+      <span id="timeRemaining">&nbsp;</span>
+      <span class="score">&nbsp;</span>
+    </h1>
+    <button id="start" onClick="startGame()">Start!</button>
+  </div>
+
+  <div class="game">
+    <div class="hole hole1">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole2">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole3">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole4">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole5">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole6">
+      <div class="mole"></div>
+    </div>
+  </div>
+
+  <script>
+    const holes = Array.from(document.querySelectorAll('.hole'));
+    const holeCount = holes.length;
+    const scoreBoard = document.querySelector('.score');
+    const moles = Array.from(document.querySelectorAll('.mole'));
+    const startButton = document.querySelector('#start');
+    const timeRemaining = document.querySelector('#timeRemaining');
+
+    const gameLength = 15000; // milliseconds
+    const minPopupMilliseconds = 200;
+    const maxPopupMilliseconds = 1500;
+
+    let lastHoleIndex = -1;
+    let gameOver = false;
+    let score = -1;
+    let countdown;
+
+    function timer(seconds) {
+      clearInterval(countdown);
+
+      const now = Date.now();
+      const then = now + seconds * 1000;
+      displayTimeLeft(seconds);
+
+      countdown = setInterval(() => {
+        const secondsLeft = Math.round((then - Date.now()) / 1000);
+
+        if (secondsLeft < 0) {
+          return clearInterval(countdown);
+        }
+
+        displayTimeLeft(secondsLeft);
+      }, 1000);
+    }
+
+    function displayTimeLeft(seconds) {
+      const stringBuilder = [];
+      let unitCalculator = { remaining: seconds, value: 0 };
+      const remaining = { seconds };
+
+      const hours = calculateUnits(remaining, 3600);
+      const hasHours = hours > 0;
+      if (hasHours) {
+        stringBuilder.push(hours);
+      }
+
+      const minutes = calculateUnits(remaining, 60);
+      if (hasHours || minutes > 0) {
+        stringBuilder.push(formatUnits(minutes, /*zeroPrefix=*/ hasHours));
+      } else {
+        stringBuilder.push('');
+      }
+
+      stringBuilder.push(formatUnits(remaining.seconds));
+
+      const display = stringBuilder.join(':');
+      console.log(display);
+      timeRemaining.textContent = display;
+    }
+
+    function randomTime(min, max) {
+      return Math.round(Math.random() * (max - min) + min);
+    }
+
+    function randomHole() {
+      // Random returns a floating-point value less than 1.
+      // Math.floor returns the integer portioin of a floating-point value.
+      const index = Math.floor(Math.random() * holeCount);
+
+      if (index === lastHoleIndex) {
+        return randomHole(holes);
+      }
+
+      lastHoleIndex = index;
+      const hole = holes[index];
+
+      return hole;
+    }
+
+    function popUp() {
+      const time = randomTime(minPopupMilliseconds, maxPopupMilliseconds);
+      const hole = randomHole();
+
+      hole.classList.add('up');
+
+      setTimeout(() => {
+        hole.classList.remove('up');
+        if (!gameOver) {
+          popUp();
+        }
+      }, time);
+    }
+
+    function incrementScore() {
+      scoreBoard.textContent = `score: ${++score}`;
+    }
+
+    function calculateUnits(remaining, divisor) {
+      const { seconds } = remaining;
+      const units = Math.floor(seconds / divisor);
+      remaining.seconds = seconds % divisor;
+      return units;
+    }
+
+    function formatUnits(units, zeroPrefix = true) {
+      return zeroPrefix && units < 10 ? `0${units}` : units;
+    }
+
+    function whack(e) {
+      if (!e.isTrusted) return; // ignore click from JavaScript
+
+      incrementScore();
+      this.classList.remove('up');
+    }
+
+    function startGame() {
+      score = -1;
+      incrementScore();
+      gameOver = false;
+
+      timer(gameLength / 1000);
+      popUp();
+      startButton.style.display = 'none';
+
+      setTimeout(() => {
+        gameOver = true;
+        startButton.style.display = 'inline';
+      }, gameLength);
+    }
+
+    moles.forEach(mole => mole.addEventListener('click', whack));
+
+    startButton.addEventListener('click', startGame);
+  </script>
+</body>
+
+</html>
